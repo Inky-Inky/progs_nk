@@ -8,6 +8,6 @@ My Hexen II resume:
   - Exes: https://hexenworld.org/downloads/hexen2/uhexen2-shanjaq/
   - Code: https://github.com/Shanjaq/uhexen2
 
-This repository contains the modified HexenC code used by Wheel Of Karma, on the initial basis of POP's code.
-Since WOK is a years-long project, the code constantly goes on evolving and comes with no guarantee of any kind.
+This repository contains the modified HexenC code used by Wheel Of Karma, on the initial basis of POP's code.  
+Since WOK is a years-long project, the code constantly goes on evolving and comes with no guarantee of any kind.  
 My only request is that if you find it useful and take some of it for your own projects, please duly credit me.
