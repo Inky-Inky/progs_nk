@@ -200,20 +200,16 @@ void trigger_wanderlust_use ()
 		targ = world;
 		do
 		{
-			if(self.target)
-				targ = find (targ, targetname, self.target); //All the occurrences whose targetname is self.target
-			else if(self.netname)
-				targ = find (targ, netname, self.netname); //All the occurrences whose netname is self.netname
-			else if(self.model)
-				targ = find (targ, classname, self.model); //All the occurrences of the class whose name is self.model
+			if(self.spawnflags & 1/*Target netname*/)
+				targ = find (targ, netname, self.target); //All the occurrences whose netname is self.netname
+			else if(self.spawnflags & 2/*Target classname*/)
+				targ = find (targ, classname, self.target); //All the occurrences of the class whose name is self.model
 			else
-			{
-				bprint("trigger_wanderlust doesn't know what to look for.\n");
-				return;
-			}
+				targ = find (targ, targetname, self.target); //All the occurrences whose targetname is self.target
+
 			if (!targ)
 				return;
-			
+
 			if(targ.movechain.classname!="wanderlust")
 			{
 				//Create a wanderlust entity (destination) for the target entity (unless there is one already)
@@ -233,6 +229,11 @@ void trigger_wanderlust_use ()
 			}
 		}
 		while (1);
+	}
+	else
+	{
+		bprint("trigger_wanderlust doesn't know what to look for.\n");
+		return;
 	}
 }
 
@@ -636,6 +637,11 @@ void trigger_setproperty_use ()
 			{
 				referenced = find (world, targetname, self.msg3);bprint("Setting ");bprint(targ.targetname);bprint(".movechain to ");bprint(referenced.classname);bprint(".");bprint(referenced.targetname);bprint("\n");
 				targ.movechain = referenced;
+			}
+			//netname
+			else if (self.netname == "netname")
+			{
+				targ.netname = self.msg3;
 			}
 			//nextthink
 			else if (self.netname == "nextthink")

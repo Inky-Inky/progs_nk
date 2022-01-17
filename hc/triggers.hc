@@ -1226,11 +1226,11 @@ entity SelectSafePoint ()
 	float best_distance = 32000;
 	float distance;
 	entity found = world;
-	entity e;
+	entity e = world;
     
     while( (e = find(e, classname, "info_teleport_destination")) )
     {
-		if(!e.flags) continue;
+		if(e.flags==FALSE) continue;
 		
 		distance = vlen(e.origin - player.origin);
 		if (distance > best_distance) continue;
@@ -1356,7 +1356,7 @@ float poof_speed;
 		}
 	}
 	
-	if((self.netname == "teleportcoin" || t.spawnflags&4) && other==player) //Inky 20201217 Force facing angle at destination
+	if((self.netname == "teleportcoin" || t.spawnflags&4/*Force facing angle*/) && other==player) //Inky 20201217 Force facing angle at destination
 	{
 		vector face = t.mangle;
 		if(face=='0 0 0') face = t.angles;

@@ -780,6 +780,7 @@ void chunk_death (void)
 	if(self.classname=="monster_eidolon")
 		return;
 
+	self.health = 0; //Inky 20220109 Any any risk of tunaway loop between chunk_death and SUB_UseTargets
 	SUB_UseTargets();
 	
 	/*20210703 bmFbr's shadows code*/

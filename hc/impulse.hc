@@ -355,6 +355,11 @@ void() ImpulseCommands =
 
 	if (self.impulse == 9&&skill<3)
 		CheatCommand ();
+	else if (self.impulse == 19&&skill<3)
+	{
+		self.switchshadstyle (+) FL_INFINITE_MANA;
+		self.impulse = 0;
+	}
 	else if(self.impulse==177)//Make BBOX model
 		if(self.movechain.model=="models/playrbox.mdl")
 		{
