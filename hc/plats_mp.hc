@@ -586,6 +586,13 @@ ANGLE_WAIT - Train will not change angles until it reached path_corner, and will
 MODEL_AND_BRUSH - Trains with weaponmodel set keep their brushes drawn as well
 PLAYER_MODEL - weaponmodel is automatically set to the relevant player model depending on the current class
 
+self.decap:
+0 - Initial state when spawned or "returned" (used for the second time -first time being the train activation- with spawnflags & TRAIN_RETURN 'Return')
+1 - Moving
+2 - Stopped (like spawnflags & TRAIN_WAITTRIG 'Toggle')
+Not so clear what difference is self.decap==0 versus self.decap==2 (train seems able to be fired again in both cases)
+If spawnflags & TRAIN_RETURN 'Return', seems the train can be returned specifically to one of its path_corners and not just the next one thanks to its netname being the pc's targetname
+
 Animation
 ---------
 Train must have a weaponmodel + the following special settings at each path_corner meant to be reached with an animation:

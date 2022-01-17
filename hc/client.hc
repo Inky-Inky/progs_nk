@@ -1722,6 +1722,8 @@ void() PlayerPreThink =
 {
 	vector	spot1, spot2;	
 
+	if(player==world) player=self;
+	
 	self.friction = 1;
 
 	if ((self.health<=0) && (self.movetype!=MOVETYPE_NOCLIP))
@@ -1765,10 +1767,9 @@ void() PlayerPreThink =
 	//Inky 20211111 START - liquid func_train_mp support
 	// Set cshift back to normal if eyes are out of liquid func_train_mp
 	if (self.watertime < time) {
-		if (self.watershift) {
-			stuffcmd(self, "v_cshift 130 80 50 0\n");
+		stuffcmd(self, "v_cshift 130 80 50 0\n");
+		if (self.watershift)
 			self.watershift = FALSE;
-		}
 	}
 
 	if (self.zerogtime < time)
@@ -1893,7 +1894,7 @@ void() PlayerPreThink =
 		self.velocity = '0 0 0';
 
 	//// TEMP::God Mode Mana Save
-	if (self.flags & FL_GODMODE)
+	if (self.switchshadstyle & FL_INFINITE_MANA)
 	{
 		self.bluemana = self.max_mana;
 		self.greenmana = self.max_mana;

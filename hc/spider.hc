@@ -368,12 +368,19 @@ void SpiderDie(void) [++ $sdeath1..$sdeath20]
 			self.movetype=MOVETYPE_BOUNCE;
 	}
 
+	/*
 	if(self.frame == $sdeath20)
 	{
 		self.think=SpiderGone;
 	}
 	if(self.health<-20)
 		chunk_death();
+	*/
+	//Inky 20220109 Changed the code above into the one below. Otherwise a runaway loop was susceptible to occur.
+	if(self.health<-20)
+		chunk_death();
+	else if(self.frame == $sdeath20)
+		self.think=SpiderGone;
 }
 
 void SpiderGone(void)

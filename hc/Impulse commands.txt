@@ -1,0 +1,35 @@
+1 à 4	Change weapon (or RPG answers: Inky custom)
+9	All weapons
+10
+11
+12
+13
+14
+15	Kill/touch or use aimed entity
+16	Kill all monsters
+17	Remove aimed entity
+19	Infinite mana (Inky custom: previously was granted automatically by god mode, which is no more)
+22
+23
+23
+25	Gimme a Tome Of Power
+27
+28
+32
+33
+35
+36
+37
+39
+40
+41
+42
+43
+44
+99
+100 à 115
+171 à 175
+177
+178
+254
+255

@@ -117,6 +117,7 @@ float FL_ARCHIVE_OVERRIDE		= 1048576;	// quake 2 thingy
 float FL_CLASS_DEPENDENT		= 2097152;  // model will appear different to each player
 float FL_SPECIAL_ABILITY1		= 4194304;  // has 1st special ability
 float FL_SPECIAL_ABILITY2		= 8388608;  // has 2nd special ability
+float FL_INFINITE_MANA			= 16777216; // Infinite mana
 
 //edict.flags2
 //FIXME: Shielded and small may be able to be determined by
