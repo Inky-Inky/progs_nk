@@ -43,7 +43,7 @@ void() button_return =
 	if (self.health)
 		self.takedamage = DAMAGE_NO_GRENADE;	// can be shot again
 	
-	//Inky 20201213 A fire toggle button triggers its target upon return as well
+	//Inky 20201213 A toggle button triggers its target upon return as well
 	//(use in conjunction with a trigger_message_transfer to have a different effect when being pushed or released)
 	if(self.spawnflags & BUTTON_TOGGLE && self.health > 0 && !self.inactive)
 		SUB_UseTargets();

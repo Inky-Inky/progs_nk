@@ -232,15 +232,15 @@ void() multi_use =
 	inversepp = (self.spawnflags & SPAWNFLAG_NO_PP);
 
 //	dprint(other.classname);
-	if(other.classname=="player")
+	if(activator.classname=="player")
 	{
-		if (!check_puzzle_pieces(other,removepp,inversepp))
+		if (!check_puzzle_pieces(activator,removepp,inversepp))
 		{
 			if (self.no_puzzle_msg && !deathmatch&& time>self.attack_finished)
 			{
 				temp = getstring(self.no_puzzle_msg);
 				if (!deathmatch)
-					centerprint (other, temp);
+					centerprint (activator, temp);
 				self.attack_finished = time + 2;
 			}
 			return;
@@ -770,8 +770,22 @@ void() counter_use =
 		if (activator.classname == "player"
 		&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0 && !deathmatch)
 		{
-			if (self.count >= 4)
+			if (self.count >= 11)
 				centerprint (activator, "There are more to go...");
+			else if (self.count == 10)
+				centerprint (activator, "Only 10 more to go...");
+			else if (self.count == 9)
+				centerprint (activator, "Only 9 more to go...");
+			else if (self.count == 8)
+				centerprint (activator, "Only 8 more to go...");
+			else if (self.count == 7)
+				centerprint (activator, "Only 7 more to go...");
+			else if (self.count == 6)
+				centerprint (activator, "Only 6 more to go...");
+			else if (self.count == 5)
+				centerprint (activator, "Only 5 more to go...");
+			else if (self.count == 4)
+				centerprint (activator, "Only 4 more to go...");
 			else if (self.count == 3)
 				centerprint (activator, "Only 3 more to go...");
 			else if (self.count == 2)
@@ -2604,7 +2618,7 @@ void trigger_message_transfer_use ()
 	{
 		temp = getstring(self.message);
 		if (!deathmatch)
-			centerprint(activator, temp);
+			centerprint(player, temp);
 	}
 	other.nexttarget=self.target;
 }
