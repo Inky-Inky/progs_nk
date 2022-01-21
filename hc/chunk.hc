@@ -754,6 +754,8 @@ void chunk_death (void)
 		scalemod = 1;
 	}
 
+	if(self.dmg_take > 1) model_cnt = self.dmg_take;
+	
 	if(model_cnt>CHUNK_MAX)
 		model_cnt=CHUNK_MAX;
 

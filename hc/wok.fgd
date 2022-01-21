@@ -1560,15 +1560,16 @@ model
 	]
 	message(integer) : "String index #"
 	//noise1(string) : "Noise (dir/sound.wav)"
-	level(integer) : "Count of possible answers"
-	puzzle_piece_1(string) : "Target for answer #1"
+	level(integer) : "Answers count"
+	puzzle_piece_1(string) : "Target for answer #1 (must be set to blank if 1st page of a multi-pages message)"
 	puzzle_piece_2(string) : "Target for answer #2"
 	puzzle_piece_3(string) : "Target for answer #3"
 	puzzle_piece_4(string) : "Target for answer #4"
 	target(target_destination) : "Target(s) fired by reading the plaque"
 	killtarget(target_destination) : "Target(s) killed by reading the plaque"
+	wait(integer) : "Set to -1 if target/killtarget must be processed upon first reading only" : 0
 ]
-
+					
 @PointClass base(Appearflags, Targetname, Target) size(-8 -8 -8, 8 8 16) color(80 0 200) model({ "path": "models/puzzle/"+puzzle_id+".mdl" })= puzzle_piece : "Puzzle piece"
 [
 	spawnflags(Flags) =

@@ -736,7 +736,7 @@ void() func_wall_toggle_use =
 		self.effects(+)EF_NODRAW;
 		self.solid = SOLID_NOT;
 	}
-	bprint(self.targetname);bprint(".solid = ");bprint(ftos(self.solid));bprint("\n");
+	//bprint(self.targetname);bprint(".solid = ");bprint(ftos(self.solid));bprint("\n");
 };
 
 /*QUAKED func_wall (0 .5 .8) ? TRANSLUCENT INVISIBLE

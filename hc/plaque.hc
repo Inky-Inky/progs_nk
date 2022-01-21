@@ -17,9 +17,12 @@ RPG howto:
 level               says how many choices the plaque's message offers to the player. Only when reading a plaque with such a range a player can make a choice
                     (prevents choices input by mistake during normal play even without reading any plaque or before doing so)
                     when the player chooses, the plaque's message becomes its initial message number + the player choice number (= the player's worldtype property)
-impulse             lets the plaque itself make a choice for the player (value must be 240 or higher; player's worldtype property will be set to (impulse-240) --ob$olete
+					Exception:
+					For long messages spreading over more than one page, the initial plaque will have self.level==2 so that the "next" command is always 2 (more consistent UX).
+					The 1 command should then be explicitly ignored by setting self.puzzle_piece_1 to blank.
 target              let the reading of the plaque trigger targets
 killtarget          let the reading of the plaque kill targets
+wait				If -1, SUB_UseTargets is called upon first reading only
 puzzle_piece_1..4   if set, when the player makes a choice, instead of displaying the corresponding message based on the offset, the control goes to a brand new plaque
                     whose targetname is puzzle_piece_N (which must be initially deactivated). Useful for chaining choices.
 					puzzle_piece_N may be anything else instead (a trigger, a func_door...): it's activated (in case it's deactivated initially) then its use() function is called, if it has one.
@@ -33,7 +36,7 @@ void plaque_use (void)
 void plaque_touch (void)
 {
 	vector	spot1, spot2;	
-	float tmpmessage;
+	float tmpmessage,msg_incr;
 	string nexttargetname;
 	entity nextplaque;
 	
@@ -46,27 +49,28 @@ void plaque_touch (void)
 		//Player's worldtype property taken into account only if the plaque is set up for it, otherwise it's reset. 
 		if(other.worldtype>self.level)
 			other.worldtype=0;
+	
+		msg_incr = other.worldtype;
 		
 		//Player's worldtype property taken into account only once: then self.level is reset to 0 to prevent more answers and ensure a single forward-only dialog.
 		//The plaqueflg property is reset as well, so that the subsequent message can be displayed without forcing the player to leave the plaque then come back.
 		if(other.worldtype > 0)
 		{
 			self.waterlevel = self.level;
-			self.level = 0;
 			other.plaqueflg = 0;
+			
+			if(!(self.level==2 && self.puzzle_piece_1=="" && other.worldtype == 1))
+				self.level = 0;
+
+			//Inky 20220117 Specific treatment of the starting page of a multi-pages message
+			if(self.level==2 && self.puzzle_piece_1=="")
+			{
+				msg_incr = other.worldtype - 1; //Hack to ignore a "previous" command and treat a "next" command as "self.message++"
+			}			
 		}
 		
-		/*--ob$olete
-		if(self.impulse)
-		{
-			other.impulse=self.impulse;
-			ImpulseCommands();
-			self.impulse=0;
-		}
-		*/
-
 		//Trigger behavior
-		tmpmessage = self.message + other.worldtype;
+		tmpmessage = self.message + msg_incr;
 		self.message = 0;
 		if(self.wait>-2)
 			SUB_UseTargets();
@@ -74,43 +78,46 @@ void plaque_touch (void)
 			self.wait=-2;
 		self.message = tmpmessage;
 		
-		//Jump to the next plaque if any
-		if(other.worldtype==1)
-			nexttargetname = self.puzzle_piece_1;
-		else if(other.worldtype==2)
-			nexttargetname = self.puzzle_piece_2;
-		else if(other.worldtype==3)
-			nexttargetname = self.puzzle_piece_3;
-		else if(other.worldtype==4)
-			nexttargetname = self.puzzle_piece_4;
-		else
-			nexttargetname = "";
-		
-		if(nexttargetname != "")
+		if(other.worldtype > 0)
 		{
-			nextplaque = find(world, targetname, nexttargetname);
-			if(nextplaque)
+			//Jump to the next plaque if any
+			if(other.worldtype==1)
+				nexttargetname = self.puzzle_piece_1;
+			else if(other.worldtype==2)
+				nexttargetname = self.puzzle_piece_2;
+			else if(other.worldtype==3)
+				nexttargetname = self.puzzle_piece_3;
+			else if(other.worldtype==4)
+				nexttargetname = self.puzzle_piece_4;
+			else
+				nexttargetname = "";
+			
+			if(nexttargetname != "")
 			{
-				other.plaqueflg = 0;
-				other.worldtype=0;
-				self.inactive = TRUE;
-				if(nextplaque.classname=="plaque")
+				nextplaque = find(world, targetname, nexttargetname);
+				if(nextplaque)
 				{
-					//Reset level to its initial value
-					if(nextplaque.level==0 && nextplaque.waterlevel > 0)
-						nextplaque.level = nextplaque.waterlevel;
-					//Reset message to its initial value
-					self.message=self.no_puzzle_msg;
+					other.plaqueflg = 0;
+					other.worldtype=0;
+					self.inactive = TRUE;
+					if(nextplaque.classname=="plaque")
+					{
+						//Reset level to its initial value
+						if(nextplaque.level==0 && nextplaque.waterlevel > 0)
+							nextplaque.level = nextplaque.waterlevel;
+						//Reset message to its initial value
+						self.message=self.no_puzzle_msg;
+					}
+					else
+					{
+						plaque_draw(MSG_ONE,0);
+					}
+					self = nextplaque;
+					self.inactive = FALSE;
+					if(self.use)
+						self.use();
+					return;
 				}
-				else
-				{
-					plaque_draw(MSG_ONE,0);
-				}
-				self = nextplaque;
-				self.inactive = FALSE;
-				if(self.use)
-					self.use();
-				return;
 			}
 		}
 	}
