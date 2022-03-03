@@ -56,6 +56,7 @@
 		16384 : "Not in Hard" : 0
 		32768 : "Not in Deathmatch" : 0
 		131072 : "Not in singleplayer" : 0
+		8388608 : "Don't stealth teleport" : 0
 	]
 ]
 
@@ -914,6 +915,7 @@
 	[
 		1 : "Reward" : 0
 		2 : "Once on startup" : 0
+		4 : "Multi-use" : 0
 	]
 	speed(choices) : "Attenuation" : 0 =
 	[

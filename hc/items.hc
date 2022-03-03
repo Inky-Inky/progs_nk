@@ -1855,6 +1855,10 @@ float total;
 		}
 	}
 
+	//Inky 20220219 A multi-use spawner doesn't reset its counters, to allow a later reuse
+	if(self.classname=="item_spawner" && self.spawnflags&4/*Multi-use*/)
+		return item;
+	
 	self.cnt_torch=0;
     self.cnt_h_boost=0;
     self.cnt_sh_boost=0;

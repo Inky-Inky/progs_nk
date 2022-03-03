@@ -322,13 +322,19 @@ Works in pairs with an identical twin trigger_teleport_stealth entity (target) s
 If not meant to be one-way only, another pair must be placed 64 units away (too far away for the player to fire both pairs simultaneously);
 Both pairs must reference each other through close_target to toggle one each other.
 If only one pair is used, there will be no reactivation once used and the trip will be one-way, like if the player started a new map (actually a new submap) with no turning back.
-Pay attention to setting to inactive (spawnflags 8) the very first "backward" trigger_teleport_stealth the player will encounter otherwise they will cross the line twice and nothing will have happened for good!
+Pay attention to setting to inactive (spawnflags 8) the very first "backward" trigger_teleport_stealth the player will encounter otherwise they will cross the line twice and nothing will have happened!
 (except a super short 64 units long visit to the destination place!)
 ===================
 FIELDS
 .target         Points to an identical trigger_teleport_stealth standing in a same looking place in the same position.
 .close_target   Points to another trigger_teleport_stealth standing 64 units away which, once touched, will teleport the player then instantly deactivate itself and reactivate this one.
 */
+
+float IsTeleportable(entity ent)
+{
+	if(ent.flags & 8388608/*Don't stealth teleport*/) return FALSE;
+	return ent.flags & (FL_MONSTER | FL_ITEM) || ent.movetype == MOVETYPE_FLYMISSILE || ent.movetype == MOVETYPE_BOUNCE || ent.movetype == MOVETYPE_BOUNCEMISSILE;
+}
 
 void() teleport_stealth_touch =
 {
@@ -340,22 +346,41 @@ void() teleport_stealth_touch =
 
 	//Instantly put itself in deactivated mode to be sure it won't fire again before the player has left the volume
 	self.inactive=TRUE;
-	
-	//Fire its targets
-	SUB_UseTargets ();
-	
+
 	//Find its twin destination
 	twin = find (world, targetname, self.target);
 	while(twin!=world&&twin.classname!="trigger_teleport_stealth")
 		twin = find (twin, targetname, self.target);
 	if (!twin) objerror ("couldn't find target");
 
-	//Move the player there smartly
+	//Prepare the moves
+	vector offset;
 	twin.inactive=TRUE;
-	vector offset = other.origin - self.finaldest;
+	vector reference = self.finaldest;
+
+/*	//Move all the entities in the player's
+	entity oself = self;
+	self = nextent(other);
+	while(self)
+	{
+		if(checkclient ())
+		{
+			offset = self.origin - reference;
+			setorigin (self, twin.finaldest + offset);
+			if(self.flags&FL_MONSTER) self.flags(-)FL_ONGROUND;
+		}
+		self=nextent(self);
+	}
+	self = oself;
+*/	
+	//Fire the targets if any
+	//SUB_UseTargets ();
+
+	//Move the player
+	offset = other.origin - reference;
 	setorigin (other, twin.finaldest + offset);
 	other.flags(-)FL_ONGROUND;
-	
+
 	//Find its backward counterpart and set it active to allow the player turning back
 	if(twin.close_target)
 	{
@@ -380,7 +405,7 @@ Works basically like trigger_teleport_stealth except the teleportation is cross-
 Better use it in places with static geometry only (objects present here and not there would lessen the smoothness)
 Must target an identical trigger_changelevel_stealth (by targetname) & info_player_start (by netname) at destination.
 If not meant to be one-way only, another trigger must be placed 64 units away (too far away for the player to fire both triggers simultaneously);
-Pay attention to setting to inactive (spawnflags 8) the very "backward" trigger the player will encounter otherwise they will cross the line twice and nothing will have happened for good!
+Pay attention to setting to inactive (spawnflags 8) the very "backward" trigger the player will encounter otherwise they will cross the line twice and nothing will have happened!
 (except a super short 64 units long visit to the destination place!)
 ===================
 FIELDS
